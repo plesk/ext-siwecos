@@ -1,6 +1,6 @@
 <?php
 
-use PleskExt\Skeleton\Helper;
+use PleskExt\Siwecos\Helper;
 
 class ApiController extends pm_Controller_Action
 {

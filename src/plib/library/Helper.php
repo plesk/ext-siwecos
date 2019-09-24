@@ -1,6 +1,6 @@
 <?php
 
-namespace PleskExt\Skeleton;
+namespace PleskExt\Siwecos;
 
 class Helper
 {

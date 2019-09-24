@@ -1,16 +1,16 @@
 {
-    "name": "plesk/ext-skeleton",
-    "description": "Plesk extension skeleton",
+    "name": "plesk/ext-siwecos",
+    "description": "SIWECOS",
     "type": "project",
     "license": "Apache-2.0",
     "autoload": {
         "psr-4": {
-            "PleskExt\\Skeleton\\": "modules/skeleton/library/"
+            "PleskExt\\Siwecos\\": "modules/siwecos/library/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "PleskExt\\Skeleton\\": "src/plib/library/"
+            "PleskExt\\Siwecos\\": "src/plib/library/"
         }
     },
     "require": {
