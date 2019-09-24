@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module>
+    <id>skeleton</id>
+    <name>Skeleton</name>
+    <description>Plesk extension skeleton</description>
+    <category>example</category>
+    <version>1.0.0</version>
+    <release>1</release>
+    <vendor>Plesk</vendor>
+    <url>https://www.plesk.com</url>
+    <plesk_min_version>17.8.11</plesk_min_version>
+</module>

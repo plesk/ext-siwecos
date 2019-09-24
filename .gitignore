@@ -1,0 +1,4 @@
+/node_modules
+/src/htdocs/dist
+/src/htdocs/index.php
+/src/plib/vendor

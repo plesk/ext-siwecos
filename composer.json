@@ -1,0 +1,25 @@
+{
+    "name": "plesk/ext-skeleton",
+    "description": "Plesk extension skeleton",
+    "type": "project",
+    "license": "Apache-2.0",
+    "autoload": {
+        "psr-4": {
+            "PleskExt\\Skeleton\\": "modules/skeleton/library/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "PleskExt\\Skeleton\\": "src/plib/library/"
+        }
+    },
+    "require": {
+        "php": "^7.0"
+    },
+    "require-dev": {
+        "plesk/pm-api-stubs": "^18.0"
+    },
+    "config": {
+        "vendor-dir": "src/plib/vendor"
+    }
+}
