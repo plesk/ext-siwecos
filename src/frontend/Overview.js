@@ -4,6 +4,7 @@ import {
     Component,
     createElement,
     PropTypes,
+    Translate,
 } from '@plesk/plesk-ext-sdk';
 
 export default class Overview extends Component {
@@ -14,7 +15,8 @@ export default class Overview extends Component {
     render() {
         return (
             <div>
-                {'Nothing to see here...'}
+                <h3><Translate content="Overview.descriptionSubject"/></h3>
+                <p><Translate content="Overview.description"/></p>
             </div>
         );
     }

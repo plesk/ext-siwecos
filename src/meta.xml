@@ -2,10 +2,10 @@
 <module>
     <id>siwecos</id>
     <name>SIWECOS</name>
-    <description>SIWECOS</description>
+    <description>SIWECOS stands for "Secure Websites and Content Management Systems" and  helps small and medium-sized enterprises (SMEs) detect and fix security vulnerabilities on their websites.</description>
     <category>security</category>
     <version>1.0.0</version>
-    <release>1</release>
+    <release>{{RELEASE}}</release>
     <vendor>Plesk</vendor>
     <url>https://www.plesk.com</url>
     <plesk_min_version>17.8.11</plesk_min_version>

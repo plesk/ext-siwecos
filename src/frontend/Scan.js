@@ -70,7 +70,7 @@ export default class Scan extends Component {
     render() {
         if (this.state.loading) {
             return (
-                <ContentLoader text={<Translate content="Scan.running" />}/>
+                <ContentLoader text={<Translate content="Scan.running"/>}/>
             );
         }
 
