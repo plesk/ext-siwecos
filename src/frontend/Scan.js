@@ -8,6 +8,7 @@ import {
     PropTypes,
     Section,
     SectionItem,
+    Translate,
 } from '@plesk/plesk-ext-sdk';
 
 import * as qs from 'query-string';
@@ -64,12 +65,12 @@ export default class Scan extends Component {
                     );
                 }
             });
-    }
+    };
 
     render() {
         if (this.state.loading) {
             return (
-                <ContentLoader />
+                <ContentLoader text={<Translate content="Scan.running" />}/>
             );
         }
 
