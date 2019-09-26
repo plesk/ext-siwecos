@@ -15,7 +15,7 @@ class Helper
         $info = \pm_Context::getModuleInfo();
 
         $client = new \Zend_Http_Client($url, [
-            'timeout' => 30,
+            'timeout'   => 30,
             'useragent' => "Mozilla/5.0 (compatible; SIWECOS Plesk Extension/{$info->version})",
         ]);
 
@@ -23,5 +23,25 @@ class Helper
         $client->setHeaders('Content-Type', 'application/json');
 
         return $client;
+    }
+
+    /**
+     * Checks the availability of the requested domain
+     *
+     * @param \pm_Domain $domainObject
+     *
+     * @return bool
+     */
+    public static function domainAvailable($domainObject): bool
+    {
+        if (!$domainObject->isActive() || !$domainObject->hasHosting()) {
+            return false;
+        }
+
+        if ($domainObject->isSuspended() || $domainObject->isDisabled()) {
+            return false;
+        }
+
+        return true;
     }
 }
