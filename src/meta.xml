@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module>
     <id>siwecos</id>
-    <name>SIWECOS</name>
+    <name>SIWECOS - Security Scanner</name>
     <description>SIWECOS stands for "Secure Websites and Content Management Systems" and  helps small and medium-sized enterprises (SMEs) detect and fix security vulnerabilities on their websites.</description>
     <category>security</category>
     <version>1.0.0</version>
