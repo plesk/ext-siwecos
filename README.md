@@ -8,7 +8,7 @@ SIWECOS will improve the security of websites in the long-term and also raise SM
 
 **How to use the SIWECOS - Website Security Scanner extension?**
 
-The extension adds a custom icon in the domain overview "Websites & Domains" for each domain. With a click on this button, the extension triggers a live scan, and the domain is tested thoroughly by the SIWCOS scanner applying many security rules. Once the scan has been performed completely, a detailed result page with all tested rules and many security tips is loaded.
+The extension adds a custom icon in the domain overview "Websites & Domains" for each domain. With a click on this button, the extension triggers a live scan, and the domain is tested thoroughly by the SIWECOS scanner applying many security rules. Once the scan has been performed completely, a detailed result page with all tested rules and many security tips is loaded.
 
 ### Need more information?
 
