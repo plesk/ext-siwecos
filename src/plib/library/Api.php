@@ -22,7 +22,7 @@ class Api
         $response = self::post($url, $data);
 
         if (!$response->isSuccessful()) {
-            throw new \pm_Exception('Failed to register token');
+            throw new \pm_Exception('Failed to register token. Response from API: ' . $response->getBody());
         }
 
         $json = $response->getBody();
@@ -52,7 +52,7 @@ class Api
         $response = self::post($url, $data);
 
         if (!$response->isSuccessful()) {
-            throw new \pm_Exception('Failed to start scan for domain ' . $domain . ': ' . $response->getBody());
+            throw new \pm_Exception('Failed to start scan for domain ' . $domain . '. Response from API: ' . $response->getBody());
         }
 
         $json = $response->getBody();
@@ -67,7 +67,7 @@ class Api
         $response = self::post($url);
 
         if (!$response->isSuccessful()) {
-            throw new \pm_Exception('Failed to get scan report #' . $scanId . ': ' . $response->getBody());
+            throw new \pm_Exception('Failed to get scan report #' . $scanId . '. Response from API: ' . $response->getBody());
         }
 
         $json = $response->getBody();
@@ -106,7 +106,7 @@ class Api
             if ($response->getStatus() === 404) {
                 return self::DOMAIN_STATUS_INACTIVE;
             } else {
-                throw new \pm_Exception('Failed to get status for domain ' . $domain . ': ' . $response->getBody());
+                throw new \pm_Exception('Failed to get status for domain ' . $domain . '. Response from API: ' . $response->getBody());
             }
         }
 
@@ -129,7 +129,7 @@ class Api
         $response = self::post($url, $data);
 
         if (!$response->isSuccessful()) {
-            throw new \pm_Exception('Failed to add domain ' . $domain . ': ' . $response->getBody());
+            throw new \pm_Exception('Failed to add domain ' . $domain . '. Response from API: ' . $response->getBody());
         }
 
         $json = $response->getBody();
@@ -157,7 +157,7 @@ class Api
         $fileManager->removeFile($file);
 
         if (!in_array($response->getStatus(), [200, 403])) {
-            throw new \pm_Exception('Failed to verify domain ' . $domain . ': ' . $response->getBody());
+            throw new \pm_Exception('Failed to verify domain ' . $domain . '. Response from API: ' . $response->getBody());
         }
     }
 }

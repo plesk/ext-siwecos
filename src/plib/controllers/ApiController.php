@@ -7,12 +7,17 @@ class ApiController extends pm_Controller_Action
     public function startScanAction(): void
     {
         $domainId = (int) $this->getParam('domainId');
-        $domain = \pm_Domain::getByDomainId($domainId);
-        $scanId = Api::startScan($domain->getName());
 
-        $this->_helper->json([
-            'scanId' => $scanId,
-        ]);
+        try {
+            $domain = \pm_Domain::getByDomainId($domainId);
+            $scanId = Api::startScan($domain->getName());
+
+            $this->ajaxSuccess([
+                'scanId' => $scanId,
+            ]);
+        } catch (\Exception $e) {
+            $this->ajaxError($e->getMessage());
+        }
     }
 
     public function scanStatusAction(): void
@@ -22,10 +27,14 @@ class ApiController extends pm_Controller_Action
         $finished = ($report['status'] === 'finished');
         $report = $finished ? $this->cleanReport($report['report']) : [];
 
-        $this->_helper->json([
-            'finished' => $finished,
-            'report' => $report,
-        ]);
+        try {
+            $this->ajaxSuccess([
+                'finished' => $finished,
+                'report' => $report,
+            ]);
+        } catch (\Exception $e) {
+            $this->ajaxError($e->getMessage());
+        }
     }
 
     private function cleanReport(array $report): array
@@ -46,5 +55,27 @@ class ApiController extends pm_Controller_Action
         }
 
         return $result;
+    }
+
+    private function ajaxResponse(array $data = []): void
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $this->getResponse()->setBody(json_encode($data));
+    }
+
+    protected function ajaxSuccess(array $data = []): void
+    {
+        $this->ajaxResponse($data);
+    }
+
+    protected function ajaxError(string $message): void
+    {
+        $this->getResponse()->setHttpResponseCode(500);
+
+        $this->ajaxResponse([
+            'message' => $message,
+        ]);
     }
 }

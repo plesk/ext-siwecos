@@ -1,6 +1,7 @@
 // Copyright 1999-2019. Plesk International GmbH. All rights reserved.
 
 import {
+    Alert,
     Component,
     ContentLoader,
     createElement,
@@ -21,6 +22,7 @@ export default class Scan extends Component {
 
     state = {
         loading: true,
+        error: '',
         scanId: 0,
         report: [],
     };
@@ -38,12 +40,22 @@ export default class Scan extends Component {
                 });
 
                 this.checkStatus();
+            })
+            .catch(error => {
+                this.setState({
+                    loading: false,
+                    error: error.response.data.message,
+                });
             });
     }
 
     params = qs.parse(location.search);
 
     checkStatus = () => {
+        if (this.state.scanId <= 0) {
+            return;
+        }
+
         axios
             .get(`${this.props.baseUrl}/api/scan-status`, {
                 params: {
@@ -64,6 +76,12 @@ export default class Scan extends Component {
                         3000
                     );
                 }
+            })
+            .catch(error => {
+                this.setState({
+                    loading: false,
+                    error: error.response.data.message,
+                });
             });
     };
 
@@ -71,6 +89,14 @@ export default class Scan extends Component {
         if (this.state.loading) {
             return (
                 <ContentLoader text={<Translate content="Scan.running"/>}/>
+            );
+        }
+
+        if (this.state.error !== '') {
+            return (
+                <Alert intent="danger">
+                    {this.state.error}
+                </Alert>
             );
         }
 
