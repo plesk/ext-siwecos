@@ -97,4 +97,20 @@ class Helper
 
         return $ipResolving;
     }
+
+    /**
+     * @param string $response
+     *
+     * @return string
+     */
+    public static function getErrorMessage(string $response): string
+    {
+        $responseJson = json_decode($response, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE || empty($responseJson['message'])) {
+            return $response;
+        }
+
+        return $responseJson['message'];
+    }
 }
