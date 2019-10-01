@@ -22,13 +22,30 @@ class Api
         $response = self::post($url, $data);
 
         if (!$response->isSuccessful()) {
-            throw new \pm_Exception('Failed to register token. Response from API: ' . $response->getBody());
+            throw new \pm_Exception('Failed to register token. Response from API: ' . Helper::getErrorMessage($response->getBody()));
         }
 
         $json = $response->getBody();
         $result = json_decode($json, true);
 
         return $result['token'];
+    }
+
+    private static function post(string $url, array $data = []): \Zend_Http_Response
+    {
+        return self::request($url, $data, 'POST');
+    }
+
+    private static function request(string $url, array $data = [], string $method = 'GET'): \Zend_Http_Response
+    {
+        $client = Helper::httpClient($url);
+        $token = Config::getToken();
+        $json = json_encode($data);
+
+        $client->setHeaders('SIWECOS-Token', $token);
+        $client->setRawData($json);
+
+        return $client->request($method);
     }
 
     public static function startScan(string $domain): int
@@ -52,49 +69,13 @@ class Api
         $response = self::post($url, $data);
 
         if (!$response->isSuccessful()) {
-            throw new \pm_Exception('Failed to start scan for domain ' . $domain . '. Response from API: ' . $response->getBody());
+            throw new \pm_Exception('Failed to start scan for domain ' . $domain . '. Response from API: ' . Helper::getErrorMessage($response->getBody()));
         }
 
         $json = $response->getBody();
         $data = json_decode($json, true);
 
         return $data['scan_id'];
-    }
-
-    public static function scanReport(int $scanId): array
-    {
-        $url = self::API_URL . '/scan/' . $scanId . '/en';
-        $response = self::post($url);
-
-        if (!$response->isSuccessful()) {
-            throw new \pm_Exception('Failed to get scan report #' . $scanId . '. Response from API: ' . $response->getBody());
-        }
-
-        $json = $response->getBody();
-
-        return json_decode($json, true);
-    }
-
-    private static function request(string $url, array $data = [], string $method = 'GET'): \Zend_Http_Response
-    {
-        $client = Helper::httpClient($url);
-        $token = Config::getToken();
-        $json = json_encode($data);
-
-        $client->setHeaders('SIWECOS-Token', $token);
-        $client->setRawData($json);
-
-        return $client->request($method);
-    }
-
-    private static function get(string $url, array $data = []): \Zend_Http_Response
-    {
-        return self::request($url, $data, 'GET');
-    }
-
-    private static function post(string $url, array $data = []): \Zend_Http_Response
-    {
-        return self::request($url, $data, 'POST');
     }
 
     private static function domainStatus(string $domain, string &$verificationToken = ''): int
@@ -106,7 +87,7 @@ class Api
             if ($response->getStatus() === 404) {
                 return self::DOMAIN_STATUS_INACTIVE;
             } else {
-                throw new \pm_Exception('Failed to get status for domain ' . $domain . '. Response from API: ' . $response->getBody());
+                throw new \pm_Exception('Failed to get status for domain ' . $domain . '. Response from API: ' . Helper::getErrorMessage($response->getBody()));
             }
         }
 
@@ -116,6 +97,11 @@ class Api
         $verificationToken = $result['verification_token'];
 
         return $result['is_verified'] ? self::DOMAIN_STATUS_OK : self::DOMAIN_STATUS_UNVERIFIED;
+    }
+
+    private static function get(string $url, array $data = []): \Zend_Http_Response
+    {
+        return self::request($url, $data, 'GET');
     }
 
     private static function addDomain(string $domain): string
@@ -129,7 +115,7 @@ class Api
         $response = self::post($url, $data);
 
         if (!$response->isSuccessful()) {
-            throw new \pm_Exception('Failed to add domain ' . $domain . '. Response from API: ' . $response->getBody());
+            throw new \pm_Exception('Failed to add domain ' . $domain . '. Response from API: ' . Helper::getErrorMessage($response->getBody()));
         }
 
         $json = $response->getBody();
@@ -157,7 +143,21 @@ class Api
         $fileManager->removeFile($file);
 
         if (!in_array($response->getStatus(), [200, 403])) {
-            throw new \pm_Exception('Failed to verify domain ' . $domain . '. Response from API: ' . $response->getBody());
+            throw new \pm_Exception('Failed to verify domain ' . $domain . '. Response from API: ' . Helper::getErrorMessage($response->getBody()));
         }
+    }
+
+    public static function scanReport(int $scanId): array
+    {
+        $url = self::API_URL . '/scan/' . $scanId . '/en';
+        $response = self::post($url);
+
+        if (!$response->isSuccessful()) {
+            throw new \pm_Exception('Failed to get scan report #' . $scanId . '. Response from API: ' . Helper::getErrorMessage($response->getBody()));
+        }
+
+        $json = $response->getBody();
+
+        return json_decode($json, true);
     }
 }
