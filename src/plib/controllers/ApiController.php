@@ -9,8 +9,18 @@ class ApiController extends pm_Controller_Action
         $domainId = (int) $this->getParam('domainId');
 
         try {
+            if (!\pm_Session::getClient()->hasAccessToDomain($domainId)) {
+                throw new \pm_Exception('Access denied');
+            }
+
             $domain = \pm_Domain::getByDomainId($domainId);
             $scanId = Api::startScan($domain->getName());
+
+            if (!isset($_SESSION['siwecosScanIds'])) {
+                $_SESSION['siwecosScanIds'] = [];
+            }
+
+            $_SESSION['siwecosScanIds'][$scanId] = $domainId;
 
             $this->ajaxSuccess([
                 'scanId' => $scanId,
@@ -20,17 +30,51 @@ class ApiController extends pm_Controller_Action
         }
     }
 
+    protected function ajaxSuccess(array $data = []): void
+    {
+        $this->ajaxResponse($data);
+    }
+
+    private function ajaxResponse(array $data = []): void
+    {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+
+        $this->getResponse()->setBody(json_encode($data));
+    }
+
+    protected function ajaxError(string $message): void
+    {
+        $this->getResponse()->setHttpResponseCode(500);
+
+        $this->ajaxResponse([
+            'message' => $message,
+        ]);
+    }
+
     public function scanStatusAction(): void
     {
         $scanId = (int) $this->getParam('scanId');
-        $report = Api::scanReport($scanId);
-        $finished = ($report['status'] === 'finished');
-        $report = $finished ? $this->cleanReport($report['report']) : [];
+        $scanIds = $_SESSION['siwecosScanIds'] ?? [];
 
         try {
+            if (!isset($scanIds[$scanId])) {
+                throw new \pm_Exception('Access denied');
+            }
+
+            $domainId = $scanIds[$scanId];
+
+            if (!\pm_Session::getClient()->hasAccessToDomain($domainId)) {
+                throw new \pm_Exception('Access denied');
+            }
+
+            $report = Api::scanReport($scanId);
+            $finished = ($report['status'] === 'finished');
+            $report = $finished ? $this->cleanReport($report['report']) : [];
+
             $this->ajaxSuccess([
                 'finished' => $finished,
-                'report' => $report,
+                'report'   => $report,
             ]);
         } catch (\Exception $e) {
             $this->ajaxError($e->getMessage());
@@ -55,27 +99,5 @@ class ApiController extends pm_Controller_Action
         }
 
         return $result;
-    }
-
-    private function ajaxResponse(array $data = []): void
-    {
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-
-        $this->getResponse()->setBody(json_encode($data));
-    }
-
-    protected function ajaxSuccess(array $data = []): void
-    {
-        $this->ajaxResponse($data);
-    }
-
-    protected function ajaxError(string $message): void
-    {
-        $this->getResponse()->setHttpResponseCode(500);
-
-        $this->ajaxResponse([
-            'message' => $message,
-        ]);
     }
 }
